@@ -1,31 +1,35 @@
-# Напишите декоратор @cached, который кэширует результаты функции, чтобы
-# избежать повторных вычислений для одних и тех же аргументов. Декоратор
-# должен поддерживать:
+import time
+from functools import wraps
+from collections import OrderedDict
 
-# • ограничение размера кэша: при превышении максимально хранимого
-# количества записей (max_size) удаляются самые старые записи:
-# • если max_size=None, то размер кэша не ограничен
-# • если max_size не соответствует целому числу, то также
-# инициализировать его как None
-# • время жизни записей: автоматически удалять результаты, сохранённые
-# более seconds назад:
-# • если seconds=None, то записи не устаревают
-# • размер кэша не ограничен, если seconds не соответствует целому
-# числу, то также инициализировать его как None
-# • декоратор должен учитывать как позиционные (*args), так и
-# именованные аргументы (**kwargs)
-class cashed(max_size = None, seconds = None):
-    pass
+def cached(max_size=None, seconds=None):
+    if not isinstance(max_size, int):
+        max_size = None
+    if not isinstance(seconds, int):
+        seconds = None
 
-# Тесты для примеров и проверки:
-@cached(max_size=3, seconds=10)
-def slow_function(x):
-    print(f"Вычисляю для {x}...")
-    return x ** 2
-# #### Первый вызов — вычисляется
-# print(slow_function(2)) # Вывод: "Вычисляю для 2..." → 4
-# #### Повторный вызов с теми же аргументами — берётся из кэша
-# print(slow_function(2)) # Вывод: 4 (без вычисления)
-# #### Через 15 секунд кэш устареет, и будет новое вычисление
-# time.sleep(15)
-# print(slow_function(2)) # Вывод: "Вычисляю для 2..." → 4
+    def decorator(func):
+        cache = OrderedDict()
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            key = (args, frozenset(kwargs.items()))
+
+            if key in cache:
+                result, timestamp = cache[key]
+                if seconds is None or time.time() - timestamp < seconds:
+                    return result
+                else:
+                    del cache[key]
+
+            result = func(*args, **kwargs)
+            cache[key] = (result, time.time())
+
+            if max_size is not None and len(cache) > max_size:
+                cache.popitem(last=False)
+
+            return result
+
+        return wrapper
+    return decorator
+

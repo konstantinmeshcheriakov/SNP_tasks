@@ -42,13 +42,13 @@ class JellyBean(Dessert):
 
     @property
     def flavor(self):
-        return self._flavor
+        return self.__flavor
 
     @flavor.setter
     def flavor(self, flavor):
-        self._flavor = flavor
+        self.__flavor = flavor
 
-    def is_delicious(self, _name=None):
-        # Десерт невкусный только если flavour равен "black licorice"
-        return self.flavor != 'black licorice'
-    
+    def is_delicious(self):
+        if self.flavor == 'black licorice':
+            return False
+        return super().is_delicious()
