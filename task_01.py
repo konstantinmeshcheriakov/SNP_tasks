@@ -22,6 +22,6 @@ def is_palindrom(s):
         return False
 
 
-
+print(is_palindrom('abc.,.,.,.,cba'))
 
     
