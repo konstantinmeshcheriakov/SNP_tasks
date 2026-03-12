@@ -33,4 +33,4 @@ class Dessert:
         return self.__calories < 200
 
     def is_delicious(self, __name):
-        self.type_name(__name)
+        return True
