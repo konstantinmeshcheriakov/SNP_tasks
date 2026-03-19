@@ -18,7 +18,6 @@ class Dessert:
     @name.setter
     def name(self, name):
         self._name = name
-        self.is_delicious(self._name)
 
     @property
     def calories(self):
@@ -27,12 +26,14 @@ class Dessert:
     @calories.setter
     def calories(self, calories):
         self._calories = calories
-        self.is_healthy(self._calories)
 
-    def is_healthy(self, _calories):
-        return self._calories < 200
+    def is_healthy(self):
+        try:
+            return float(self.calories) < 200
+        except (TypeError, ValueError):
+            return False
 
-    def is_delicious(self, _name):
+    def is_delicious(self):
         return True
 
 class JellyBean(Dessert):
@@ -52,3 +53,5 @@ class JellyBean(Dessert):
         if self.flavor == 'black licorice':
             return False
         return super().is_delicious()
+
+

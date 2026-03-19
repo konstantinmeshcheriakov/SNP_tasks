@@ -18,6 +18,7 @@ def count_words(s, pr = None):
         for i in range(0, len(arr1)):
             counter = arr1.count(arr1[i])
             dict1[arr1[i]] = counter
-        print(dict(sorted(dict1.items(), key=lambda item: item[1], reverse=True)))
+        return dict(sorted(dict1.items(), key=lambda item: item[1], reverse=True))
+
 
 

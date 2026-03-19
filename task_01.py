@@ -1,4 +1,4 @@
-def is_palindrom(s):
+def is_palindrome(s):
     p = ",.'-:;!?"
     if s == None:
         return False
