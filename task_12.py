@@ -11,9 +11,11 @@ class Dessert:
     @staticmethod
     def validete_calories(calories):
         if not isinstance(calories, (int, float)):
-            raise TypeError('Калории должны быть числом')
+            print('Калории должны быть числом')
+            return False
         if calories < 0:
-            raise ValueError('Калории не могут быть отрицательным числом')
+            print('Калории не могут быть отрицательным числом')
+            return False
         return True
     
     @property
@@ -23,7 +25,8 @@ class Dessert:
     @name.setter
     def name(self, name):
         if not Dessert.type_name(name):
-            raise ValueError('Название десерта должно быть строкой')
+            print('Название десерта должно быть строкой')
+            return False
         self._name = name
 
     @property
